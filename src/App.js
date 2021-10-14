@@ -22,16 +22,18 @@ class App extends Component {
 
   render() {
   return (
-     <>
-        <Header />
-        <Control updateUI={this.updateImageAndText} />
-        <Output 
-          topText={this.state.topText}
-          bottomText={this.state.bottomText}
-          memeImage={this.state.memeImage}
-       />
-        <Footer />
-      </>
+     <div className="container.is-fullhd">
+       <div className = "notification is-primary">
+          <Header />
+          <Control updateUI={this.updateImageAndText} />
+          <Output 
+            topText={this.state.topText}
+            bottomText={this.state.bottomText}
+            memeImage={this.state.memeImage}
+         />
+          <Footer />
+        </div>
+      </div>
     );
   }
 }

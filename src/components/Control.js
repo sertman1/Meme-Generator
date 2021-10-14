@@ -1,33 +1,39 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
 
 class Control extends Component {
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = {  // textFields represent the state of the 2 search bars
             topText: "",
             bottomText: ""
         };
     }
 
+    // these functions allow the user to type input into either
+    // search bar and have it continuosly display what they are typing
     changeTopWord = (event) => {
         this.setState({topText: event.target.value})
     }
-
     changeBottomWord = (event) => {
         this.setState({bottomText: event.target.value})
     }
 
-    fetchMemes = (event) => {
+    fetchMemes = async (event) => {
         event.preventDefault();
         const memeAPI = "https://api.imgflip.com/get_memes";
-        fetch(`${memeAPI}`)
-            .then((response) => response.json())
-            .then(data => {
-                const images = data.data.memes;
-                const image = images[Math.floor(Math.random() * images.length)];
-                this.props.updateUI(this.state.topText, this.state.bottomText, image);
-            })
-            .catch(err => console.log(err));
+        try {
+          const response = await axios.get(`${memeAPI}`);
+          const data = response.data;
+          const images = data.data.memes;
+          const image = images[Math.floor(Math.random() * images.length)];
+          // a call to fetchMemes means the user clicked 'Go!', so we must
+          // update the UI with both their inputed text and the fetched image:
+          this.props.updateUI(this.state.topText, this.state.bottomText, image);
+        } catch (err) {
+          console.log(err);
+        }
     };
 
     render() {
@@ -72,5 +78,9 @@ class Control extends Component {
     );
   }
 }
+
+Control.propTypes = {
+    updateUI: PropTypes.func.isRequired
+};
 
 export default Control;
